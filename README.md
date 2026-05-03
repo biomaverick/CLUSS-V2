@@ -134,9 +134,13 @@ below to gauge expected runtime before launching large jobs.
 - Reduce `--chunk-size` if you hit memory limits during matrix construction.
 
 ---
+## Credits
+**CLUSS V2.0** developed by [Debojyoti C](https://github.com/biomaverick)
+Based on the original CLUSS algorithm:
+> Kelil, Wang, Brzezinski & Fleury (2007) *BMC Bioinformatics* 8:286
+> DOI: 10.1186/1471-2105-8-286
 
 ## References
-
 1. Kelil et al. (2007) CLUSS. *BMC Bioinformatics* 8:286
 2. Murphy et al. (2000) Reduced alphabets. *Protein Engineering* 13:149
 3. Wootton & Federhen (1993) SEG algorithm. *Comput Chem* 17:149
