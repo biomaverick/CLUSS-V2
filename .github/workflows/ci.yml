@@ -25,7 +25,7 @@ jobs:
         run: pip install -e ".[dev]"
 
       - name: Lint
-        run: flake8 cluss_plus/ --max-line-length=100 --ignore=E203,W503
+        run: flake8 . --max-line-length=100 --ignore=E203,W503
 
       - name: Run tests
         run: pytest tests/ -v -m "not slow" --cov=cluss_plus --cov-report=term-missing
