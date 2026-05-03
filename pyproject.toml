@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.backends.legacy:build"
 
 [project]
-name = "cluss-plus"
+name = "CLUSS_V2"
 version = "2.0.0"
 description = "Alignment-free protein sequence clustering (CLUSS+ v2.0)"
 readme = "README.md"
@@ -36,7 +36,7 @@ dev = [
 ]
 
 [project.scripts]
-"cluss+" = "cluss_plus.main:main"
+"cluss+" = "CLUSS_V2.main:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -46,7 +46,7 @@ markers = [
 
 [tool.setuptools.packages.find]
 where   = ["."]
-include = ["cluss_plus*"]
+include = ["CLUSS_V2*"]
 
 [tool.setuptools.package-data]
-cluss_plus = ["py.typed"]
+CLUSS_V2 = ["py.typed"]
