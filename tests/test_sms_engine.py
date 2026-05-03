@@ -27,7 +27,7 @@ import pytest
 import numpy as np
 
 
-from cluss_plus.similarity.sms_engine import (
+from similarity.sms_engine import (
     AA_ORDER, AA_TO_INT, MASK_INT,
     _MURPHY8, _MURPHY10,
     encode_sequence,
@@ -58,7 +58,7 @@ def family_ctx(blosum62_diag):
     Pre-computed s_max context for a family whose longest sequence has 40 AAs.
     Re-used across normalisation and pair tests.
     """
-    from cluss_plus.similarity.sms_matrix import compute_s_max
+    from similarity.sms_matrix import compute_s_max
     seqs = {
         "long":    "ACDEFGHIKLMNPQRSTVWY" * 2,   # 40 AA (longest in family)
         "full":    "ACDEFGHIKLMNPQRSTVWY",
@@ -449,7 +449,7 @@ class TestSMaxNormalisation:
         assert score >= 0.0
 
     def test_longest_self_scores_exactly_one(self, blosum62_diag):
-        from cluss_plus.similarity.sms_matrix import compute_s_max
+        from similarity.sms_matrix import compute_s_max
         seq = "ACDEFGHIKLMNPQRSTVWY"
         s_max, llen = compute_s_max({"only": seq}, blosum62_diag)
         score = compute_sms_pair(seq, seq, blosum62_diag, llen, s_max,
@@ -520,7 +520,7 @@ class TestComputeSmsPair:
         differ only by conservative substitutions within one Murphy class.
         (I, L, V are all in Murphy8 class 0 — aliphatic hydrophobic.)
         """
-        from cluss_plus.similarity.sms_matrix import compute_s_max
+        from similarity.sms_matrix import compute_s_max
         # Conserved flanks (ACDEF + MNPQR); middle differs by conservative subs
         seq_a = "ACDEF" + "ILVAL" + "MNPQR"
         seq_b = "ACDEF" + "VIVLL" + "MNPQR"  # I↔V, L↔I, V↔V, A→L, L↔L
@@ -570,7 +570,7 @@ class TestMakeDomainMask:
 
     def test_domain_weighting_changes_pair_score(self, blosum62_diag):
         """Domain mask must actually affect the computed pair score."""
-        from cluss_plus.similarity.sms_matrix import compute_s_max
+        from similarity.sms_matrix import compute_s_max
         seq  = "ACDEFGHIKLMNPQRSTVWY"
         s_max, llen = compute_s_max({"a": seq}, blosum62_diag)
 

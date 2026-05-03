@@ -29,14 +29,14 @@ Design decisions
 
 Usage (programmatic)
 ────────────────────
-  from cluss_plus.visualization.tree_plot import plot_radial_tree, plot_rect_tree
+  from visualization.tree_plot import plot_radial_tree, plot_rect_tree
 
   plot_radial_tree(root, cluster_ids, annotations, out_dir="output")
   plot_rect_tree  (root, cluster_ids, annotations, out_dir="output")
 
 Usage (CLI integration — called from main.py --plot-tree)
 ──────────────────────────────────────────────────────────
-  from cluss_plus.visualization.tree_plot import render_tree
+  from visualization.tree_plot import render_tree
   render_tree(root, cluster_ids, annotations, out_dir, style="radial")
 """
 
@@ -50,7 +50,7 @@ import matplotlib.patches as mpatches
 import matplotlib.lines as mlines
 from matplotlib.colors import to_hex
 
-from cluss_plus.tree.phylo_tree import TreeNode
+from tree.phylo_tree import TreeNode
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Color palette

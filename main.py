@@ -24,32 +24,32 @@ import json
 log = logging.getLogger(__name__)
 
 
-from cluss_plus.preprocessing.fasta_parser    import parse_fasta, validate_sequences
-from cluss_plus.preprocessing.complexity_mask import (mask_all_sequences,
+from preprocessing.fasta_parser    import parse_fasta, validate_sequences
+from preprocessing.complexity_mask import (mask_all_sequences,
                                            mask_all_disordered)
-from cluss_plus.preprocessing.taxon_weights   import compute_taxon_weights
+from preprocessing.taxon_weights   import compute_taxon_weights
 
-from cluss_plus.similarity.sms_matrix  import (build_sms_matrix,
+from similarity.sms_matrix  import (build_sms_matrix,
                                      build_esm2_matrix,
                                      build_hybrid_matrix)
 
-from cluss_plus.tree.phylo_tree         import build_phylo_tree
+from tree.phylo_tree         import build_phylo_tree
 
-from cluss_plus.clustering.cosimilarity       import (compute_leaf_weights,
+from clustering.cosimilarity       import (compute_leaf_weights,
                                            compute_node_weights,
                                            compute_cosimilarity)
-from cluss_plus.clustering.boundary_detector  import detect_boundaries
-from cluss_plus.clustering.cluster_extractor  import extract_clusters
+from clustering.boundary_detector  import detect_boundaries
+from clustering.cluster_extractor  import extract_clusters
 
-from cluss_plus.evaluation.q_measure          import (load_reference,
+from evaluation.q_measure          import (load_reference,
                                            compute_q_measure,
                                            compute_standard_metrics,
                                            save_metrics)
-from cluss_plus.evaluation.go_enrichment      import go_enrichment
+from evaluation.go_enrichment      import go_enrichment
 
-from cluss_plus.annotation.uniprot_fetcher    import fetch_all_annotations
+from annotation.uniprot_fetcher    import fetch_all_annotations
 
-from cluss_plus.output.writer import (write_cluster_tsv,
+from output.writer import (write_cluster_tsv,
                             write_cluster_fasta,
                             write_newick,
                             write_go_terms,
@@ -164,7 +164,7 @@ def _save_tree(root, nodes, out_dir: str) -> None:
     path = _tree_checkpoint_path(out_dir)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     try:
-        from cluss_plus.tree.phylo_tree import to_newick as _to_newick
+        from tree.phylo_tree import to_newick as _to_newick
         newick_str = _to_newick(root)
         with open(path, "w") as fh:
             fh.write(newick_str)
@@ -181,7 +181,7 @@ def _load_tree(out_dir: str):
     if not os.path.exists(path):
         return None, None
     try:
-        from cluss_plus.tree.phylo_tree import newick_to_treenodes
+        from tree.phylo_tree import newick_to_treenodes
         root, nodes = newick_to_treenodes(path)
         log.info("Tree checkpoint loaded (Newick): %s", path)
         return root, nodes
@@ -412,10 +412,10 @@ def run(args: argparse.Namespace) -> None:
     )
 
     if args.plot:
-        from cluss_plus.clustering.boundary_detector import (otsu_threshold, gmm_threshold,
+        from clustering.boundary_detector import (otsu_threshold, gmm_threshold,
                                                    kneedle_threshold)
-        from cluss_plus.visualization.tree_plot import render_tree
-        from cluss_plus.visualization.heatmap   import plot_all as plot_heatmaps
+        from visualization.tree_plot import render_tree
+        from visualization.heatmap   import plot_all as plot_heatmaps
 
         threshold_fn = {"otsu": otsu_threshold,
                         "gmm":  gmm_threshold,

@@ -17,7 +17,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-from cluss_plus.tree.phylo_tree import TreeNode
+from tree.phylo_tree import TreeNode
 
 
 def compute_leaf_weights(root: TreeNode) -> dict[int, float]:

@@ -25,7 +25,7 @@ from itertools import combinations
 from joblib import Parallel, delayed
 from tqdm import tqdm
 
-from cluss_plus.similarity.sms_engine import (encode_sequence, compute_sms_pair)
+from similarity.sms_engine import (encode_sequence, compute_sms_pair)
 
 log = logging.getLogger(__name__)
 

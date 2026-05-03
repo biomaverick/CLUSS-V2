@@ -35,16 +35,16 @@ import pytest
 import numpy as np
 
 
-from cluss_plus.preprocessing.fasta_parser    import parse_fasta, validate_sequences
-from cluss_plus.preprocessing.complexity_mask import mask_all_sequences, mask_low_complexity
-from cluss_plus.similarity.sms_matrix         import build_sms_matrix, compute_s_max
-from cluss_plus.tree.phylo_tree               import build_phylo_tree, assign_depths
-from cluss_plus.clustering.cosimilarity       import (compute_leaf_weights,
+from preprocessing.fasta_parser    import parse_fasta, validate_sequences
+from preprocessing.complexity_mask import mask_all_sequences, mask_low_complexity
+from similarity.sms_matrix         import build_sms_matrix, compute_s_max
+from tree.phylo_tree               import build_phylo_tree, assign_depths
+from clustering.cosimilarity       import (compute_leaf_weights,
                                            compute_node_weights,
                                            compute_cosimilarity)
-from cluss_plus.clustering.boundary_detector  import detect_boundaries
-from cluss_plus.clustering.cluster_extractor  import extract_clusters, collect_leaves
-from cluss_plus.evaluation.q_measure          import compute_q_measure
+from clustering.boundary_detector  import detect_boundaries
+from clustering.cluster_extractor  import extract_clusters, collect_leaves
+from evaluation.q_measure          import compute_q_measure
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -539,7 +539,7 @@ class TestOutputWriter:
         return str(tmp_path / "output")
 
     def test_clusters_tsv_has_correct_row_count(self, pipeline, out_dir):
-        from cluss_plus.output.writer import write_cluster_tsv
+        from output.writer import write_cluster_tsv
         write_cluster_tsv(pipeline["clusters"], pipeline["orphans"],
                           annotations=None, out_dir=out_dir)
         path  = os.path.join(out_dir, "clusters.tsv")
@@ -550,13 +550,13 @@ class TestOutputWriter:
             f"Expected {n_clustered+1} lines (header + data), got {len(lines)}"
 
     def test_orphans_tsv_created(self, pipeline, out_dir):
-        from cluss_plus.output.writer import write_cluster_tsv
+        from output.writer import write_cluster_tsv
         write_cluster_tsv(pipeline["clusters"], pipeline["orphans"],
                           annotations=None, out_dir=out_dir)
         assert os.path.exists(os.path.join(out_dir, "orphans.tsv"))
 
     def test_newick_file_valid(self, pipeline, out_dir):
-        from cluss_plus.output.writer import write_newick
+        from output.writer import write_newick
         write_newick(pipeline["root"], out_dir)
         path = os.path.join(out_dir, "tree.nwk")
         assert os.path.exists(path)
@@ -565,7 +565,7 @@ class TestOutputWriter:
         assert "(" in content
 
     def test_fasta_output_all_sequences(self, pipeline, out_dir):
-        from cluss_plus.output.writer import write_cluster_fasta
+        from output.writer import write_cluster_fasta
         write_cluster_fasta(SEQUENCES, pipeline["clusters"],
                             pipeline["orphans"], out_dir, split=False)
         path    = os.path.join(out_dir, "clusters.fasta")
@@ -574,7 +574,7 @@ class TestOutputWriter:
         assert len(headers) == 12
 
     def test_fasta_headers_contain_cluster_tag(self, pipeline, out_dir):
-        from cluss_plus.output.writer import write_cluster_fasta
+        from output.writer import write_cluster_fasta
         write_cluster_fasta(SEQUENCES, pipeline["clusters"],
                             pipeline["orphans"], out_dir, split=False)
         path = os.path.join(out_dir, "clusters.fasta")
@@ -584,7 +584,7 @@ class TestOutputWriter:
                     f"Header missing 'cluster=' tag: {line.strip()}"
 
     def test_split_fasta_creates_per_cluster_directory(self, pipeline, out_dir):
-        from cluss_plus.output.writer import write_cluster_fasta
+        from output.writer import write_cluster_fasta
         write_cluster_fasta(SEQUENCES, pipeline["clusters"],
                             pipeline["orphans"], out_dir, split=True)
         sub = os.path.join(out_dir, "per_cluster")
@@ -593,7 +593,7 @@ class TestOutputWriter:
         assert len(fasta_files) >= len(pipeline["clusters"])
 
     def test_checkpoint_numpy_roundtrip(self, out_dir):
-        from cluss_plus.output.writer import save_checkpoint, load_checkpoint
+        from output.writer import save_checkpoint, load_checkpoint
         S = np.eye(5, dtype=np.float32)
         save_checkpoint("mat", S, out_dir)
         loaded = load_checkpoint("mat", out_dir)
@@ -601,17 +601,17 @@ class TestOutputWriter:
         assert np.allclose(S, loaded)
 
     def test_checkpoint_json_roundtrip(self, out_dir):
-        from cluss_plus.output.writer import save_checkpoint, load_checkpoint
+        from output.writer import save_checkpoint, load_checkpoint
         data = {"k": [1, 2, 3], "v": "hello"}
         save_checkpoint("meta", data, out_dir)
         assert load_checkpoint("meta", out_dir) == data
 
     def test_checkpoint_missing_returns_none(self, out_dir):
-        from cluss_plus.output.writer import load_checkpoint
+        from output.writer import load_checkpoint
         assert load_checkpoint("does_not_exist", out_dir) is None
 
     def test_html_report_written_and_valid(self, pipeline, out_dir):
-        from cluss_plus.output.writer import write_html_report
+        from output.writer import write_html_report
         write_html_report(
             clusters    = pipeline["clusters"],
             orphans     = pipeline["orphans"],
@@ -629,7 +629,7 @@ class TestOutputWriter:
         assert str(len(pipeline["clusters"])) in content
 
     def test_summary_json_contains_metrics(self, pipeline, out_dir):
-        from cluss_plus.output.writer import write_summary_json
+        from output.writer import write_summary_json
         import json
         metrics  = {"Q_measure": 90.0, "ARI": 0.85, "runtime_seconds": 2.1}
         run_meta = {"mode": "sms"}
@@ -672,7 +672,7 @@ class TestAnnotationMocked:
 
     @resp_lib.activate
     def test_fetch_uniprot_annotation_returns_dict(self):
-        from cluss_plus.annotation.uniprot_fetcher import fetch_uniprot_annotation
+        from annotation.uniprot_fetcher import fetch_uniprot_annotation
         resp_lib.add(
             resp_lib.GET,
             "https://rest.uniprot.org/uniprotkb/P12345.json",
@@ -688,7 +688,7 @@ class TestAnnotationMocked:
 
     @resp_lib.activate
     def test_fetch_uniprot_404_returns_empty_stub(self):
-        from cluss_plus.annotation.uniprot_fetcher import fetch_uniprot_annotation
+        from annotation.uniprot_fetcher import fetch_uniprot_annotation
         resp_lib.add(
             resp_lib.GET,
             "https://rest.uniprot.org/uniprotkb/ZZZZZZ.json",
@@ -701,7 +701,7 @@ class TestAnnotationMocked:
     @resp_lib.activate
     def test_fetch_all_annotations_no_accession(self):
         """Sequence IDs that are not UniProt accessions get empty stubs."""
-        from cluss_plus.annotation.uniprot_fetcher import fetch_all_annotations
+        from annotation.uniprot_fetcher import fetch_all_annotations
         # GenBank-style IDs — no UniProt lookup expected
         results = fetch_all_annotations(
             ["AAA24053", "GenBank:BAD89079"],
@@ -722,7 +722,7 @@ class TestIdrMaskingMocked:
 
     @resp_lib.activate
     def test_mask_disordered_regions_applies_threshold(self):
-        from cluss_plus.preprocessing.complexity_mask import mask_disordered_regions
+        from preprocessing.complexity_mask import mask_disordered_regions
         seq = "ACDEF"
         resp_lib.add(
             resp_lib.GET,
@@ -750,7 +750,7 @@ def test_matrix_build_1000_sequences(tmp_path):
     AA = "ACDEFGHIKLMNPQRSTVWY"
     random.seed(99)
     seqs = {f"seq_{i}": "".join(random.choices(AA, k=50)) for i in range(1000)}
-    from cluss_plus.similarity.sms_matrix import build_sms_matrix
+    from similarity.sms_matrix import build_sms_matrix
     ids, S = build_sms_matrix(
         seqs,
         n_jobs=2,
