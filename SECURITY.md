@@ -14,7 +14,7 @@
 Use GitHub's private security advisory feature so the report remains
 confidential until a fix is released:
 
-> **https://github.com/YOUR_ORG/cluss-plus/security/advisories/new**
+> **https://github.com/biomaverick/CLUSS-V2/security/advisories/new**
 
 You can expect an initial response within **5 business days**.  If the
 vulnerability is confirmed, a patch release will be issued and the reporter

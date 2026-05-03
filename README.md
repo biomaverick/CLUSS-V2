@@ -8,8 +8,8 @@ bug fixes and biologically-motivated upgrades applied.
 ## Quick start
 
 ```bash
-git clone https://github.com/yourorg/cluss-plus.git
-cd cluss-plus
+git clone https://github.com/biomaverick/CLUSS-V2.git
+cd CLUSS_V2
 chmod +x install.sh && ./install.sh
 
 # Minimal run

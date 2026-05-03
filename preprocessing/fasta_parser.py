@@ -2,12 +2,6 @@
 preprocessing/fasta_parser.py
 ══════════════════════════════
 Parse and validate FASTA protein sequence files.
-
-Changes vs previous version:
-  - Silent sequence drops replaced with explicit per-sequence warnings
-  - Ambiguous character (X, B, Z, U) handling: report then drop
-  - Min-length configurable from CLI
-  - Full drop log saved to output/dropped.tsv
 """
 
 import logging
