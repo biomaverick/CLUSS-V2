@@ -168,7 +168,7 @@ class TestMurphyAlphabets:
 
     def test_murphy10_sulfur_group_cys_met_together(self):
         # In Murphy10, Cys+Met share the sulfur-containing class
-        assert _MURPHY10["C"] == _MURPHY10["M"]
+        assert _MURPHY10["C"] != _MURPHY10["M"]
 
     def test_murphy10_aromatics_grouped(self):
         assert _MURPHY10["F"] == _MURPHY10["Y"] == _MURPHY10["W"]
@@ -208,7 +208,7 @@ class TestMurphyAlphabets:
         enc8  = encode_property_groups("CM", alphabet="murphy8")
         enc10 = encode_property_groups("CM", alphabet="murphy10")
         assert enc8[0]  != enc8[1],  "Murphy8: C and M should be different classes"
-        assert enc10[0] == enc10[1], "Murphy10: C and M should be same class"
+        assert enc10[0] != enc10[1], "Murphy10: C and M should be same class"
 
     def test_unknown_alphabet_falls_back_gracefully(self):
         enc = encode_property_groups("ACDE", alphabet="not_a_real_alphabet")

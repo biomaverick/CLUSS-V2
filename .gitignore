@@ -1,5 +1,4 @@
 # Runtime outputs — never commit these
-output/
 results/
 checkpoints/
 *.pkl
