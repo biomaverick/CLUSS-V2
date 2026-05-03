@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use CLUSS+, please cite both the software and the original paper."
+title: "CLUSS+ v2.0"
+version: 2.0.0
+date-released: 2026-05-03
+license: MIT
+repository-code: https://github.com/YOUR_ORG/cluss-plus
+authors:
+  - family-names: Chatterjee
+    given-names: Debojyoti
+references:
+  - type: article
+    authors:
+      - family-names: Kelil
+        given-names: Abdellali
+      - family-names: Wang
+        given-names: Shengrui
+      - family-names: Brzezinski
+        given-names: Ryszard
+      - family-names: Fleury
+        given-names: Alain
+    title: "CLUSS: Clustering of protein sequences based on a new similarity measure"
+    journal: "BMC Bioinformatics"
+    volume: 8
+    issue: 286
+    year: 2007
+    doi: 10.1186/1471-2105-8-286
