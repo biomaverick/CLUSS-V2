@@ -46,6 +46,3 @@ markers = [
 
 [tool.setuptools.packages.find]
 where   = ["."]
-
-[tool.setuptools.package-data]
-* = ["py.typed"]
