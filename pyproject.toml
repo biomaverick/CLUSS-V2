@@ -8,7 +8,7 @@ version = "2.0.0"
 description = "Alignment-free protein sequence clustering (CLUSS+ v2.0)"
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "biopython>=1.81,<2.0",
     "numba>=0.57,<0.62",
