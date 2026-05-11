@@ -45,14 +45,11 @@ def compute_taxon_weights_simple(
         annotations: dict[str, dict]) -> dict[str, float]:
     """
     Compute inverse-frequency taxon diversity weights.
-
     weight[seq] = 1 / count(my_organism_in_dataset)
     Normalised so sum(weights) = N.
-
     Parameters
     ----------
     annotations : dict[seq_id -> annotation_dict with 'organism' key]
-
     Returns
     -------
     dict[seq_id -> weight (float)]
@@ -151,25 +148,20 @@ def compute_taxon_weights_phylogenetic(
         annotations: dict[str, dict]) -> dict[str, float]:
     """
     Compute phylogenetic-distance-aware taxon weights via NCBI lineage.
-
     A sequence from an organism that shares a long lineage with many
     other organisms in the dataset (phylogenetically redundant) gets
     a lower weight. Sequences from phylogenetically unique organisms
     are up-weighted.
-
     Algorithm:
       1. Fetch NCBI taxonomy lineage for each unique organism.
       2. For each sequence, compute its mean lineage overlap with all
          other sequences.
       3. Weight[seq] = 1 / (1 + mean_overlap) — high overlap → low weight.
       4. Normalise weights to sum to N.
-
     Falls back to simple inverse-frequency if NCBI queries fail.
-
     Parameters
     ----------
     annotations : dict[seq_id -> annotation_dict with 'organism' key]
-
     Returns
     -------
     dict[seq_id -> weight (float)]
@@ -217,7 +209,6 @@ def compute_taxon_weights(annotations: dict[str, dict],
                           use_phylogenetic: bool = False) -> dict[str, float]:
     """
     Dispatch to the appropriate weighting strategy.
-
     Parameters
     ----------
     annotations      : annotation dict
