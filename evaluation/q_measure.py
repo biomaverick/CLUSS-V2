@@ -2,21 +2,17 @@
 evaluation/q_measure.py
 ══════════════════════════
 Clustering quality evaluation.
-
-Metrics implemented (MD Section 2.7)
+Metrics implemented
 ──────────────────────────────────────
 1. Q-measure (Kelil et al. 2007 — paper-specific metric)
    Q = (Σ P_i - U) / N × 100  clamped to [0, 100]
    FIX: added clamp — Q went negative when U was large.
-
 2. Adjusted Rand Index (ARI) — standard external metric
    Measures agreement between two clusterings, corrected for chance.
    Range: [-1, 1] where 1 = perfect agreement, 0 = random.
-
 3. Normalised Mutual Information (NMI) — standard external metric
    Information-theoretic agreement between clusterings.
    Range: [0, 1] where 1 = perfect.
-
 4. Silhouette Score — internal metric (no reference needed)
    Measures how similar a sequence is to its own cluster vs. others.
    Range: [-1, 1] where 1 = well separated clusters.
