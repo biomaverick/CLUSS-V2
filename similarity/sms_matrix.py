@@ -2,19 +2,14 @@
 similarity/sms_matrix.py
 ══════════════════════════
 Build the full N×N pairwise SMS similarity matrix.
-
 Key fixes and upgrades
 ──────────────────────
-  FIX (MD Section 2.3): compute_s_max now returns the TOTAL weight of the
+  FIX: compute_s_max now returns the TOTAL weight of the
   longest sequence (not per-residue average).
-
   UPGRADE: multi-matrix blend (BLOSUM45/62/80) with configurable weights.
-
   UPGRADE: np.memmap-backed matrix for large N (avoids OOM on 30k+ sequences).
   Controlled by the chunk_size and out_dir parameters.
-
   UPGRADE: optional domain-aware scoring via InterPro domain annotations.
-
   UPGRADE: property-group pass uses Murphy 2000 reduced alphabets.
 """
 
