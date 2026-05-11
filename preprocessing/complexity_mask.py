@@ -3,9 +3,7 @@ preprocessing/complexity_mask.py
 ══════════════════════════════════
 Mask low-complexity regions (LCRs) and optionally intrinsically
 disordered regions (IDRs) before SMS computation.
-
 Two distinct masking strategies are implemented:
-
 1. LCR Masking — SEG-style two-threshold (Wootton & Federhen 1993)
    ─────────────────────────────────────────────────────────────────
    The ORIGINAL implementation used a single entropy threshold (2.2 bits),
@@ -14,14 +12,12 @@ Two distinct masking strategies are implemented:
           a low-complexity zone.
      k2 = extend threshold (default 2.5 bits): once triggered, the zone is
           EXTENDED outward until windows exceed k2.
-
    Why two thresholds matter:
      - Single-threshold masking at a mid-value will either miss genuine LCRs
        (if set high) or over-mask weakly biased but functional regions (if low).
      - The trigger/extend model is consistent with how the original SEG program
        (Wootton & Federhen 1993, Comput Chem 17:149) works and correctly handles
        the bimodal entropy distribution seen in most proteins.
-
 2. IDR Masking — IUPred3 API (Erdős et al. 2021)
    ─────────────────────────────────────────────────────────────────
    LCRs ≠ IDRs. Intrinsically disordered regions can have HIGH sequence
@@ -30,7 +26,6 @@ Two distinct masking strategies are implemented:
    environmental constraints (McConnell & Parker 2023, Bioinformatics).
    IUPred3 predicts disorder based on estimated residue interaction energies,
    not sequence complexity, and is the correct tool for IDR detection.
-
 References
 ----------
 Wootton & Federhen (1993) Comput Chem 17:149-163.
