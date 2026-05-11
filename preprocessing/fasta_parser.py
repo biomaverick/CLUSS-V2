@@ -50,19 +50,16 @@ def validate_sequences(sequences: dict[str, str],
     """
     Return only sequences that pass all quality gates.
     Every rejected sequence is logged with its reason.
-
     Gates (in order):
       1. Length ≥ min_len residues
       2. Only standard 20-letter amino acid alphabet
          (X, B, Z, U and other ambiguous chars are rejected here;
           masking later handles low-complexity, not here)
-
     Parameters
     ----------
     sequences  : raw parsed sequences
     min_len    : minimum sequence length (default 10)
     output_dir : directory to write dropped.tsv
-
     Returns
     -------
     clean dict[seq_id -> sequence]
