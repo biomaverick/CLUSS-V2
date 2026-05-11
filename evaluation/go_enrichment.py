@@ -55,19 +55,15 @@ def _ensure_obo() -> str:
 def reduce_go_terms(go_list: list[str]) -> list[str]:
     """
     Remove semantically redundant GO terms using the GO DAG.
-
     A term T is removed if any other term in go_list is a descendant
     of T (i.e., T is an ancestor and therefore less specific).
     Only the most specific (deepest) terms are retained.
-
     Parameters
     ----------
     go_list : list of GO accession strings (e.g. ['GO:0006468', ...])
-
     Returns
     -------
     Non-redundant list of GO terms (most specific terms only).
-
     Falls back to returning go_list unchanged if goatools is unavailable.
     """
     if not go_list:
@@ -113,14 +109,12 @@ def go_enrichment(clusters: list[list[str]],
     """
     Fisher's exact test for GO term enrichment per cluster,
     with Benjamini-Hochberg FDR correction and optional semantic reduction.
-
     Parameters
     ----------
     clusters           : list of lists of seq_ids (one list per cluster)
     annotations        : dict[seq_id -> annotation_dict with 'go_terms' key]
     alpha              : FDR significance threshold (default 0.05)
     semantic_reduction : remove ancestor GO terms from enriched sets
-
     Returns
     -------
     dict[cluster_index -> list of enriched (non-redundant) GO term strings]
