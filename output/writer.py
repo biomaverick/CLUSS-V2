@@ -54,15 +54,12 @@ def write_cluster_tsv(
 ) -> None:
     """
     Write ``clusters.tsv`` and ``orphans.tsv`` into *out_dir*.
-
     clusters.tsv columns
     ────────────────────
     cluster_id  seq_id  size  function  organism  (annotation columns optional)
-
     orphans.tsv columns
     ───────────────────
     seq_id  function  organism
-
     Parameters
     ----------
     clusters    : list of clusters, each a list of sequence IDs
@@ -109,11 +106,9 @@ def write_cluster_fasta(
 ) -> None:
     """
     Write sequences labelled by cluster into FASTA files.
-
     Always writes ``clusters.fasta`` (all clustered sequences) and
     ``orphans.fasta``.  When *split* is True, also writes one file per
     cluster into ``per_cluster/cluster_<N>.fasta``.
-
     Parameters
     ----------
     sequences : {seq_id: sequence_string}
@@ -161,11 +156,9 @@ def write_cluster_fasta(
 def write_newick(root: Any, out_dir: str) -> None:
     """
     Write the phylogenetic tree as a Newick string to ``tree.nwk``.
-
     Delegates to ``root.to_newick()`` (defined on TreeNode).  If the
     root object does not expose ``to_newick`` the call is silently skipped
     to avoid blocking the rest of the pipeline.
-
     Parameters
     ----------
     root    : TreeNode (root of the phylogenetic tree)
@@ -206,13 +199,10 @@ def write_go_terms(
 ) -> None:
     """
     Write ``go_terms.tsv`` from the GO enrichment dictionary.
-
     Expected dict structure
     ───────────────────────
     {cluster_id: [{"go_id": str, "term": str, "p_value": float, ...}, ...]}
-
     Silently writes an empty file when *enriched_go* is None or empty.
-
     Parameters
     ----------
     enriched_go : GO enrichment results or None
@@ -248,7 +238,6 @@ def write_summary_json(
 ) -> None:
     """
     Write a machine-readable ``summary.json`` run record.
-
     Parameters
     ----------
     run_meta : dict with pipeline parameters (fasta, mode, etc.)
@@ -292,16 +281,13 @@ def write_html_report(
 ) -> None:
     """
     Write a self-contained HTML summary report (``report.html``).
-
     The report includes:
       - Run parameters table
       - Metrics summary
       - Cluster size distribution bar chart (inline SVG)
       - Per-cluster accordion with member sequence IDs and annotations
       - GO term enrichment table (if available)
-
     All styling is inline CSS — no external dependencies.
-
     Parameters
     ----------
     clusters    : list of clusters, each a list of sequence IDs
@@ -517,15 +503,12 @@ def save_checkpoint(name: str, obj: Any, out_dir: str) -> None:
 def load_checkpoint(name: str, out_dir: str) -> Any:
     """
     Load a checkpoint saved by :func:`save_checkpoint`.
-
     Returns the deserialised object, or ``None`` if no checkpoint exists
     for *name* (the stage will then run from scratch).
-
     Parameters
     ----------
     name    : checkpoint identifier (no extension)
     out_dir : output root directory
-
     Returns
     -------
     Deserialised object or ``None``
