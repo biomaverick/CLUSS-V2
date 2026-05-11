@@ -38,13 +38,11 @@ def extract_clusters(root: TreeNode,
                      ) -> tuple[list[list[str]], list[str], dict]:
     """
     Extract cluster membership from the tree given cut node positions.
-
     Parameters
     ----------
     root      : root of the phylogenetic tree
     cut_nodes : set of node IDs identified as low co-similarity
     min_size  : minimum cluster size; smaller groups -> orphans (default 2)
-
     Returns
     -------
     clusters    : list of lists, each inner list = seq_ids in one cluster
