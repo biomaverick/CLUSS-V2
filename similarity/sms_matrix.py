@@ -37,10 +37,6 @@ _MEMMAP_THRESHOLD_BYTES = 400 * 1024 * 1024
 # ─────────────────────────────────────────────────────────────────────────────
 
 def load_matrix_diagonal(name: str) -> np.ndarray:
-    """
-    Load a substitution matrix and extract its diagonal as float32.
-    Diagonal M[aa, aa] encodes the conservation rate of amino acid aa.
-    """
     from Bio.Align import substitution_matrices
     AA_ORDER = "ACDEFGHIKLMNPQRSTVWY"
     mat = substitution_matrices.load(name)
@@ -53,15 +49,6 @@ def load_matrix_diagonal(name: str) -> np.ndarray:
 
 def compute_s_max(sequences: dict,
                   M_diag: np.ndarray) -> tuple:
-    """
-    Compute s_max: total self-similarity weight of the longest sequence.
-
-    FIX vs previous version:
-      OLD: returned total / len(longest)   -> per-residue average
-      NEW: returns total (not divided)
-
-    Returns (s_max_total: float, longest_len: int)
-    """
     longest = max(sequences.values(), key=len)
     X = encode_sequence(longest)
     total = float(sum(M_diag[aa] for aa in X if aa >= 0))
@@ -87,12 +74,10 @@ def build_sms_matrix(sequences: dict,
                      save_path=None) -> tuple:
     """
     Build the full symmetric N×N SMS similarity matrix in parallel.
-
     For large N (matrix RAM > _MEMMAP_THRESHOLD_BYTES), the matrix is
     backed by a np.memmap file at out_dir/checkpoints/S_matrix.dat to
     avoid OOM. Use --chunk-size to control how many pairs are computed
     per joblib batch.
-
     Parameters
     ----------
     sequences         : {seq_id: sequence_string}
@@ -108,7 +93,6 @@ def build_sms_matrix(sequences: dict,
     chunk_size        : pairs per joblib batch (reduce to lower peak RAM)
     out_dir           : directory for memmap file (used when N is large)
     save_path         : optional .npy path to save the matrix
-
     Returns
     -------
     (seq_ids: list[str], S: np.ndarray shape (N, N))
@@ -203,7 +187,7 @@ def build_sms_matrix(sequences: dict,
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ESM-2 similarity (optional — requires fair-esm + torch)
+# ESM-2 similarity ( requires fair-esm + torch)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def build_esm2_matrix(sequences: dict,
