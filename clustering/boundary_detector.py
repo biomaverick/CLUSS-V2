@@ -2,8 +2,6 @@
 clustering/boundary_detector.py
 ════════════════════════════════
 Identify low co-similarity cut points that separate clusters.
-
-Three methods (MD Section 2.5)
 ───────────────────────────────
 
 1. Otsu (default — matches original paper)
