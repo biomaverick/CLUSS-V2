@@ -3,23 +3,12 @@ clustering/cluster_extractor.py
 ================================
 Extract final protein clusters from the phylogenetic tree given the
 set of low co-similarity (cut) nodes.
-
 Implements Stage 3 Step 4 from Kelil et al. (2007):
   A subtree is a VALID CLUSTER if:
     1. It contains NO low co-similarity node inside it.
     2. Its parent DOES contain a low co-similarity node
        (or there are no cut points at all -- entire tree is one cluster).
-
 Sequences not assigned to any cluster of size >= min_size are orphans.
-
-Fix #1 (iterative traversals):
-  collect_leaves() and _traverse() were recursive and would crash with
-  RecursionError on trees deeper than sys.getrecursionlimit() (~1 000).
-  Both are now fully iterative.
-
-Fix #3 (logging):
-  Replaced print() calls with log.info() so output respects --log-level
-  and HPC scheduler log capture.
 """
 
 import logging
