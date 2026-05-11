@@ -92,16 +92,13 @@ def mask_low_complexity(seq: str,
                         mask_char: str = MASK_CHAR) -> str:
     """
     Two-threshold SEG-style low-complexity masking.
-
     Phase 1 — Trigger:
       Slide a window of length `window` across the sequence.
       Any window with Shannon entropy < k1 adds all its positions to
       the triggered set.
-
     Phase 2 — Extend:
       For each contiguous triggered region, extend leftward and rightward
       as long as the extending window's entropy < k2.
-
     Parameters
     ----------
     seq       : amino acid sequence string (uppercase)
@@ -109,7 +106,6 @@ def mask_low_complexity(seq: str,
     k1        : trigger entropy threshold in bits (default 1.8)
     k2        : extension entropy threshold in bits (default 2.5)
     mask_char : replacement character for masked positions (default 'X')
-
     Returns
     -------
     Masked sequence string of the same length as input.
@@ -224,22 +220,18 @@ def mask_disordered_regions(seq: str,
                              idr_type: str = "long") -> str:
     """
     Mask intrinsically disordered residues using the IUPred3 REST API.
-
     IUPred3 predicts disorder based on estimated residue interaction
     energies (not sequence composition), making it complementary to LCR
     masking. IDRs with IUPred3 score > threshold are masked with 'X'.
-
     Parameters
     ----------
     seq       : amino acid sequence string
     threshold : IUPred3 score cutoff for disorder (default 0.5)
     idr_type  : 'long' for long disordered segments (default),
                 'short' for short disordered loops
-
     Returns
     -------
     Masked sequence string (same length as input).
-
     Notes
     -----
     - Free API, no key required.
@@ -270,7 +262,6 @@ def mask_all_disordered(sequences: dict[str, str],
     """
     Apply IUPred3 IDR masking to all sequences.
     Results are cached to avoid re-querying.
-
     Parameters
     ----------
     sequences : {seq_id: sequence_string}
