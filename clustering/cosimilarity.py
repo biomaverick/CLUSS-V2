@@ -3,14 +3,9 @@ clustering/cosimilarity.py
 ══════════════════════════
 Compute leaf weights (Thompson 1994 method) and co-similarity values
 (Ward variant, Batagelj formulation) for all nodes in the phylogenetic tree.
-
 These are Stage 3 Steps 1 and 2 from Kelil et al. (2007).
-
 No algorithmic changes — these were already correct.
-Refactored for clarity, explicit type hints, and iterative traversals
-(Fix #1: recursive calls previously caused RecursionError on N > ~500
-because Python's default recursion limit is 1 000 and unbalanced UPGMA
-trees can exceed depth 50 000 for large inputs).
+Refactored for clarity, explicit type hints, and iterative traversals.
 """
 
 import logging
