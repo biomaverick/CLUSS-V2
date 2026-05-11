@@ -2,28 +2,19 @@
 evaluation/go_enrichment.py
 ════════════════════════════
 GO term enrichment analysis per cluster with semantic reduction.
-
 Two steps
 ──────────
-
 Step 1 — Statistical enrichment (Fisher's exact test + BH FDR)
   For each cluster, test which GO terms are over-represented compared
   to the full dataset. Uses scipy.stats.fisher_exact and
   statsmodels.stats.multitest for Benjamini-Hochberg FDR correction.
-
 Step 2 — Semantic GO term reduction (MD Section 3.5)
   Without semantic reduction, enriched GO term lists contain many
   parent-child redundancies (e.g. both 'protein phosphorylation'
   GO:0006468 and its parent 'phosphorylation' GO:0016310 may both
   be significant). This clutters the output and misleads interpretation.
-
-  Fix: use goatools to parse the GO DAG and remove any term that is an
-  ancestor of another term in the same enriched set. Only the most
-  specific (deepest) terms are retained.
-
   Requires: pip install goatools
   GO OBO file: downloaded automatically to output/go-basic.obo if absent.
-
 References
 ──────────
 Ashburner et al. (2000) Nat Genet 25:25–29. (Gene Ontology)
