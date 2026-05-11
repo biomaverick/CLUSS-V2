@@ -2,29 +2,9 @@
 similarity/sms_engine.py
 ══════════════════════════
 Core SMS (Substitution Matching Similarity) engine.
-
 Implements the algorithm from Kelil et al. (2007) BMC Bioinformatics 8:286,
 with all bug fixes and biological upgrades applied.
-
-Bug fixes applied
-─────────────────
-  BUG 1 (Critical): find_seeds() recorded wrong X position.
-    Old: seeds.append((run_start - (l-1), j-(l-1), l))
-    Fix: seeds.append((run_start,          j-(l-1), l))
-    run_start is already the first position of the run — subtracting (l-1)
-    pushed it backward and produced negative indices.
-
-  BUG 2 (s_max normalisation inconsistency — MD Section 2.3):
-    Old: s_max = sum(M_diag) / len(longest)  → per-residue average
-         raw   = score / max(len(X), len(Y)) → also per-residue average
-    Problem: when comparing two short sequences, max(len(X), len(Y))
-    < len(longest), so raw can exceed s_max and min() clips scores to 1.0,
-    flattening the matrix for short-sequence pairs.
-    Fix: s_max = sum(M_diag over longest)    → total weight (not divided)
-         raw   = score / len(longest)        → always divide by longest_len
-    This faithfully matches the paper's equation.
-
-Biological upgrades applied (MD Sections 2.1, 3.4)
+Biological upgrades applied
 ────────────────────────────────────────────────────
   1. Property-group alphabet replaced with Murphy et al. (2000) empirically
      derived reduced alphabets (Murphy8 and Murphy10), replacing the
@@ -32,15 +12,12 @@ Biological upgrades applied (MD Sections 2.1, 3.4)
      Ser/Thr (biochemically invalid — Cys forms disulfide bonds, coordinates
      metals, and has unique redox chemistry that makes it non-exchangeable
      with Ser or Thr in any biologically meaningful sense).
-
   2. Three alphabet choices exposed via `property_alphabet` parameter:
        'murphy8'  — 8-class (used in the property-group pass by default)
        'murphy10' — 10-class (retains 93% of BLOSUM62 information)
-
   3. Domain-aware SMS scoring: when InterPro domain boundaries are available,
      residues inside known globular domains are up-weighted, linker regions
      are down-weighted. This focuses SMS on biologically meaningful segments.
-
 References
 ──────────
 Murphy et al. (2000) Protein Engineering 13(3):149–152.
