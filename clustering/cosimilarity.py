@@ -18,24 +18,18 @@ from tree.phylo_tree import TreeNode
 def compute_leaf_weights(root: TreeNode) -> dict[int, float]:
     """
     Compute Thompson sequence weights for all leaf nodes.
-
     Formula (Thompson et al. 1994, Comput Appl Biosci 10:19-29):
-
         W_L = Sum  D_{Parent(i), i} / d_{Parent(i)}
               for all i on the path from L to root (excluding root)
-
     Where:
       D_{Parent(i), i} = branch length from node i to its parent
       d_{Parent(i)}    = number of leaves under i's parent
-
     Interpretation:
       Small W_L -> highly representative sequence (many close relatives)
       Large W_L -> isolated, poorly represented sequence
-
     Parameters
     ----------
     root : root TreeNode of the phylogenetic tree
-
     Returns
     -------
     dict[leaf_node_id -> weight (float)]
@@ -62,16 +56,13 @@ def compute_node_weights(root: TreeNode,
                          leaf_weights: dict[int, float]) -> dict[int, float]:
     """
     Compute node weights for all nodes (leaf and internal).
-
     For leaves: node_weight[leaf] = leaf_weights[leaf]
     For internal nodes: W_P = W_L + W_R  (sum of children's weights)
     Computed via postorder (bottom-up) traversal.
-
     Parameters
     ----------
     root         : root TreeNode
     leaf_weights : output of compute_leaf_weights()
-
     Returns
     -------
     dict[node_id -> weight (float)]
@@ -104,24 +95,18 @@ def compute_cosimilarity(root: TreeNode,
                          node_weights: dict[int, float]) -> dict[int, float]:
     """
     Compute co-similarity for every internal node P.
-
     Formula (generalised Ward / Batagelj):
-
         C_P = (W_L * W_R) / (W_L + W_R) * S_{L,R}
-
     Where:
       W_L, W_R  = weights of left and right child subtrees
       S_{L,R}   = similarity at time of merge (stored on node P)
-
     Interpretation:
       C_P is inversely proportional to within-cluster variance.
       Large C_P -> tight, compact cluster; Small C_P -> candidate cut point.
-
     Parameters
     ----------
     root         : root TreeNode
     node_weights : output of compute_node_weights()
-
     Returns
     -------
     dict[internal_node_id -> co-similarity (float)]
