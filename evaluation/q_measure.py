@@ -30,14 +30,11 @@ from sklearn.metrics import (adjusted_rand_score,
 def load_reference(file_path: str) -> dict[str, str]:
     """
     Load reference classification from a two-column TSV file.
-
     Format (tab-separated, optional header starting with #):
       seq_id <TAB> functional_group
-
     Parameters
     ----------
     file_path : path to the reference TSV file
-
     Returns
     -------
     dict[seq_id -> functional_group_string]
@@ -85,22 +82,18 @@ def compute_q_measure(clusters: list[list[str]],
                       taxon_weights: dict[str, float] | None = None) -> float:
     """
     Compute Q-measure as defined in Kelil et al. (2007).
-
         Q = max(0, (Σ P_i - U) / N) × 100
-
     Where:
       N   = total sequences (clustered + orphans)
       P_i = count (or weighted count) of the majority functional group
             in cluster i according to the reference classification
       U   = number of orphan sequences
-
     Parameters
     ----------
     clusters      : list of lists of seq_ids
     orphans       : list of unclustered seq_ids
     reference     : dict[seq_id -> functional_group]
     taxon_weights : optional per-sequence weights for weighted P_i
-
     Returns
     -------
     Q-measure in [0.0, 100.0]
@@ -135,7 +128,6 @@ def compute_standard_metrics(clusters: list[list[str]],
                              seq_ids: list[str]) -> dict[str, float]:
     """
     Compute ARI, NMI, and Silhouette score (MD Section 2.7).
-
     Parameters
     ----------
     clusters : list of lists of seq_ids
@@ -143,7 +135,6 @@ def compute_standard_metrics(clusters: list[list[str]],
     reference: dict[seq_id -> functional_group]
     S        : N×N similarity matrix (used for Silhouette via D = 1 - S)
     seq_ids  : ordered list of all sequence IDs (matches S rows/cols)
-
     Returns
     -------
     dict with keys: ARI, NMI, Silhouette
@@ -181,7 +172,6 @@ def save_metrics(Q: float,
                  standard_metrics: dict | None = None) -> None:
     """
     Save Q-measure and run statistics to metrics.json.
-
     Parameters
     ----------
     Q                : Q-measure value
