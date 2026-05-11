@@ -2,11 +2,9 @@
 output/writer.py
 ═════════════════
 CLUSS+ v2.0 — Output serialisation helpers.
-
 All eight functions write files into *out_dir* and create it (and any
 sub-directories) if it does not yet exist.  None of them raise on missing
 optional inputs — ``None`` is handled gracefully everywhere.
-
 Functions
 ─────────
 write_cluster_tsv      → clusters.tsv  +  orphans.tsv
