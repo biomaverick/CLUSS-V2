@@ -57,15 +57,13 @@ def encode_sequence(seq: str) -> np.ndarray:
 # ─────────────────────────────────────────────────────────────────────────────
 # Both derived from hierarchical clustering of BLOSUM62 substitution
 # frequencies (Murphy et al. 2000 Protein Engineering 13:149–152).
-#
-# Key fix over previous code: Cysteine (C) is no longer grouped with
+# Cysteine (C) is no longer grouped with
 # Ser/Thr. Cys is unique because:
 #   - Disulfide bond formation (structural / catalytic)
 #   - Metal coordination (Zn-finger, Fe-S clusters)
 #   - Redox sensor function
 #   - BLOSUM62 Cys row is almost entirely off-diagonal
 # ─────────────────────────────────────────────────────────────────────────────
-
 # Murphy 8-class (default for property pass)
 _MURPHY8: dict[str, int] = {
     "I": 0, "L": 0, "V": 0, "M": 0,    # hydrophobic/aliphatic
@@ -104,14 +102,6 @@ ALPHABETS: dict[str, dict[str, int]] = {
 
 def encode_property_groups(seq: str,
                            alphabet: str = "murphy8") -> np.ndarray:
-    """
-    Encode sequence using a reduced amino acid alphabet.
-
-    Parameters
-    ----------
-    seq      : amino acid string (may contain 'X' for masked positions)
-    alphabet : 'murphy8' (default) or 'murphy10'
-    """
     prop_map = ALPHABETS.get(alphabet, _MURPHY8)
     arr = np.empty(len(seq), dtype=np.int32)
     for idx, aa in enumerate(seq):
@@ -169,10 +159,6 @@ def find_seeds(X: np.ndarray, Y: np.ndarray, l: int) -> list:
     Iterates all diagonals of the implicit comparison matrix of X and Y.
     A seed is a consecutive run of identical non-masked characters of
     exactly length l, recorded at its START positions in X and Y.
-
-    FIXED: run_start IS the start position in X — do not subtract (l-1).
-           j - (l-1) gives the Y start (j is at the END of the l-th match).
-
     Parameters
     ----------
     X, Y : int32 arrays (-1 = masked, skip)
@@ -209,8 +195,6 @@ def find_seeds(X: np.ndarray, Y: np.ndarray, l: int) -> list:
             j += 1
 
     return seeds
-
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Seed expansion
 # ─────────────────────────────────────────────────────────────────────────────
@@ -220,7 +204,6 @@ def expand_seed(X: np.ndarray, Y: np.ndarray,
                 px: int, py: int, length: int):
     """
     Expand a seed match maximally in both directions along its diagonal.
-
     Returns (new_px, new_py, new_length).
     """
     x = px
@@ -255,7 +238,6 @@ def expand_seed(X: np.ndarray, Y: np.ndarray,
 def maximal_filter(expanded: list) -> list:
     """
     Retain only maximal matched subsequences.
-
     A match (px, py, l) is non-maximal if it is fully contained within
     another match both by X-position and Y-position. Deduplication and
     longest-first sorting ensures correctness in O(n²) with small n.
@@ -291,10 +273,8 @@ def _sms_score_raw(X: np.ndarray, Y: np.ndarray,
                    l: int) -> float:
     """
     Compute raw weighted match score for encoded arrays X and Y.
-
     Uses a covered[] array to prevent double-counting overlapping matches.
     Optionally applies domain-position weight masks.
-
     Returns total weight (not normalised).
     """
     seeds = find_seeds(X, Y, l)
@@ -347,12 +327,10 @@ def compute_sms_pair(seq1: str,
                      domain_weight: float = 2.0) -> float:
     """
     Compute SMS similarity between two protein sequences.
-
     Normalisation (MD Section 2.3, corrected):
       S = combined_raw / s_max_total
     s_max_total is the total diagonal weight of the longest sequence.
     Dividing directly gives S in [0,1] for all pair lengths.
-
     Parameters
     ----------
     seq1, seq2          : amino acid strings (may contain 'X' for masked)
@@ -365,7 +343,6 @@ def compute_sms_pair(seq1: str,
     property_alphabet   : 'murphy8' or 'murphy10'
     domains1, domains2  : InterPro domain dicts for seq1 and seq2
     domain_weight       : multiplier for within-domain residues (default 2.0)
-
     Returns
     -------
     float in [0, 1]
@@ -403,7 +380,7 @@ def compute_sms_pair(seq1: str,
 
 
 # ---------------------------------------------------------------------------
-# Fix #11 — Numba JIT warm-up
+# 11 — Numba JIT warm-up
 # ---------------------------------------------------------------------------
 # @njit-decorated functions (find_seeds, expand_seed) compile on the FIRST
 # call, adding 10-30 s of invisible delay that looks like a hang on large
