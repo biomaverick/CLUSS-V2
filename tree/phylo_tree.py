@@ -368,15 +368,12 @@ def to_newick(node: TreeNode,
 def newick_to_treenodes(newick_path: str) -> tuple["TreeNode", dict]:
     """
     Reconstruct a (root, nodes) pair from a Newick file on disk.
-
     Uses BioPython's ``Phylo.read`` (already a project dependency) and
     maps each clade to a ``TreeNode`` so downstream stages (co-similarity,
     cluster extraction, etc.) work unchanged.
-
     Parameters
     ----------
     newick_path : path to the ``.nwk`` file written by ``_save_tree``
-
     Returns
     -------
     (root TreeNode, nodes dict[int -> TreeNode])
