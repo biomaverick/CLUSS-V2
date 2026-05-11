@@ -3,25 +3,21 @@ clustering/boundary_detector.py
 ════════════════════════════════
 Identify low co-similarity cut points that separate clusters.
 ───────────────────────────────
-
 1. Otsu (default — matches original paper)
    Maximises between-class variance. Optimal when the co-similarity
    distribution is bimodal. Fails silently when the distribution is
    unimodal (picks arbitrary median split with no geometric meaning).
    Uses 200 candidate thresholds (doubled from original 100).
-
 2. GMM — Gaussian Mixture Model
    Fits a 2-component Gaussian mixture to co-similarity values and
    uses the intersection of the two components as the threshold.
    More principled than Otsu because it directly models the two
    populations (low/high co-similarity) rather than maximising an
    indirect variance criterion. Recommended for diverse families.
-
 3. Kneedle — knee/elbow detection
    Sorts co-similarity values and finds the inflection point of the
    curve. Robust when distributions are not bimodal and Otsu produces
    an arbitrary split. Good fallback when GMM components overlap heavily.
-
 Expose via --boundary-method {otsu, gmm, kneedle} in CLI.
 """
 
@@ -41,11 +37,9 @@ def otsu_threshold(values: list[float]) -> float:
     """
     Find threshold maximising between-class variance (Otsu 1979).
     Uses 200 candidate thresholds.
-
     Parameters
     ----------
     values : list of co-similarity floats
-
     Returns
     -------
     Optimal threshold float
@@ -82,26 +76,21 @@ def gmm_threshold(values: list[float],
                   n_components: int = 2) -> float:
     """
     2-component Gaussian Mixture Model threshold (MD Section 2.5).
-
     Directly models the 'low co-similarity' and 'high co-similarity'
     populations as Gaussian components.  The threshold is the TRUE
     intersection of the two weighted Gaussian PDFs, computed numerically
     with ``scipy.optimize.brentq``.
-
     The midpoint-of-means approximation (the previous implementation) is
     only accurate when both components have equal variance.  For the skewed
     co-similarity distributions produced by divergent protein families, the
     intersection can differ substantially from the midpoint, leading to
     mis-assignment of boundary nodes.
-
     Falls back to the midpoint approximation if ``scipy`` is unavailable or
     the root-finder does not converge, then to Otsu if GMM itself fails.
-
     Parameters
     ----------
     values       : list of co-similarity floats
     n_components : number of Gaussian components (default 2)
-
     Returns
     -------
     Threshold float — the intersection of the two Gaussian components.
@@ -156,16 +145,13 @@ def gmm_threshold(values: list[float],
 def kneedle_threshold(values: list[float]) -> float:
     """
     Find the inflection (knee) point of the sorted co-similarity curve.
-
     Robust when distributions are neither bimodal (defeating Otsu) nor
     well-separated Gaussians (defeating GMM). The knee is the point of
     maximum curvature of the sorted-value curve, found by the Kneedle
     algorithm (Satopaa et al. 2011).
-
     Parameters
     ----------
     values : list of co-similarity floats
-
     Returns
     -------
     Threshold float (the knee point value)
@@ -195,12 +181,10 @@ def detect_boundaries(cosim: dict[int, float],
                       method: str = "otsu") -> set[int]:
     """
     Classify internal nodes as low co-similarity cut points.
-
     Parameters
     ----------
     cosim  : dict[node_id -> co-similarity value]
     method : 'otsu' | 'gmm' | 'kneedle'
-
     Returns
     -------
     set of node_ids classified as low co-similarity (cut points)
