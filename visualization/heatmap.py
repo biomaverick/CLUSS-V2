@@ -2,7 +2,6 @@
 visualization/heatmap.py
 ═════════════════════════
 Similarity matrix heatmaps and cluster statistics charts.
-
 Four outputs
 ────────────
 1. plot_sms_heatmap()        — annotated N×N SMS similarity matrix heatmap,
@@ -269,7 +268,6 @@ def plot_interactive_heatmap(S: np.ndarray,
                               out_dir: str = "output") -> str:
     """
     Interactive Plotly heatmap with hover-text for each cell.
-
     Hover shows: seq_id_i × seq_id_j and their similarity score.
     Saved as self-contained HTML.
     """
@@ -346,7 +344,6 @@ def plot_cluster_sizes(clusters: list[list[str]],
     """
     Horizontal bar chart showing number of sequences per cluster.
     Orphans shown as a single bar in grey.
-
     Returns path to saved PDF.
     """
     os.makedirs(out_dir, exist_ok=True)
@@ -408,7 +405,6 @@ def plot_cosimilarity_dist(cosim: dict[int, float],
     """
     Histogram of per-node co-similarity values with the detection threshold
     drawn as a vertical dashed line.
-
     The bimodal structure (low = cut-point nodes, high = compact subtrees)
     should be visible when the Otsu threshold is meaningful.
 
@@ -419,7 +415,6 @@ def plot_cosimilarity_dist(cosim: dict[int, float],
     out_dir   : output directory
     method    : 'otsu' | 'gmm' | 'kneedle' (label only)
     title     : figure title
-
     Returns
     -------
     Path to saved PDF.
@@ -483,7 +478,6 @@ def plot_all(S: np.ndarray,
              interactive: bool = True) -> None:
     """
     Render all heatmap visualizations in a single call.
-
     Produces:
       sms_heatmap.pdf / .svg
       cluster_sizes.pdf / .svg
