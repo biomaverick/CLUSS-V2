@@ -2,7 +2,6 @@
 annotation/uniprot_fetcher.py
 ══════════════════════════════
 Fetch per-sequence annotations from UniProt REST API v2 and InterPro.
-
 What is fetched
 ───────────────
   UniProt (https://rest.uniprot.org):
@@ -11,7 +10,6 @@ What is fetched
     - protein name (recommended name)
     - GO terms (biological process, molecular function, cellular component)
     - reviewed status (Swiss-Prot vs. TrEMBL)
-
   InterPro (https://www.ebi.ac.uk/interpro/api):
     - Domain boundary list [{start, end, interpro_id, name}]
 
@@ -19,17 +17,14 @@ Design decisions
 ────────────────
   1. All results are cached to output/annotation_cache.json.
      Subsequent runs with the same IDs skip API calls entirely.
-
   2. Rate limiting: UniProt allows ~10 req/s; we use 0.12 s delay (8/s)
      to stay safely under. InterPro is stricter; 0.5 s delay used.
-
   3. ID detection: we try to extract a UniProt accession from the FASTA
      header using two patterns:
        • NCBI/SwissProt format:  >sp|P12345|NAME  or >tr|P12345|...
        • Bare accession:         >P12345 or >P12345.1
        • GenBank / DDBJ / NCBI: treated as non-UniProt; organism set to
          "Unknown" and domains left empty (no InterPro lookup).
-
   4. Annotations for sequences without resolvable UniProt IDs are left
      as empty stubs so the rest of the pipeline can proceed unchanged.
 
@@ -86,14 +81,12 @@ def _save_cache(cache: dict) -> None:
 def extract_uniprot_accession(seq_id: str) -> str | None:
     """
     Try to extract a UniProt accession from a FASTA header ID string.
-
     Handles:
       sp|P12345|NAME  →  P12345
       tr|Q8N123|NAME  →  Q8N123
       P12345          →  P12345
       P12345.1        →  P12345
       AAA24053        →  None  (GenBank-style — not a UniProt accession)
-
     Returns the accession string, or None if not detectable.
     """
     # Try sp|..|.. or tr|..|.. format
@@ -130,11 +123,9 @@ def _empty_annotation() -> dict:
 def fetch_uniprot_annotation(accession: str) -> dict:
     """
     Fetch annotation for a single UniProt accession via the REST API.
-
     Returns a dict with keys:
       accession, protein_name, gene_name, organism, taxon_id,
       reviewed, go_terms (list of GO acc strings), domains (list — from InterPro step).
-
     On any network / parse error, returns an empty annotation stub.
     """
     url = UNIPROT_URL.format(acc=accession)
@@ -188,10 +179,8 @@ def fetch_uniprot_annotation(accession: str) -> dict:
 def fetch_interpro_domains(accession: str) -> list[dict]:
     """
     Fetch InterPro domain boundary annotations for a UniProt accession.
-
     Returns list of dicts:
       [{'interpro_id': 'IPR000001', 'name': 'Kringle', 'start': 10, 'end': 85}, ...]
-
     On any error returns empty list.
     """
     url = INTERPRO_URL.format(acc=accession)
@@ -237,20 +226,17 @@ def fetch_all_annotations(seq_ids: list[str],
                            ) -> dict[str, dict]:
     """
     Fetch UniProt + optional InterPro annotations for all sequence IDs.
-
     Workflow per sequence:
       1. Try to parse a UniProt accession from seq_id.
       2. If found and not cached: fetch UniProt annotation + InterPro domains.
       3. Cache result. Subsequent calls reuse cache without network round-trips.
       4. If no UniProt accession detected: store empty annotation stub.
-
     Parameters
     ----------
     seq_ids         : list of sequence IDs (from FASTA headers)
     fetch_interpro  : also fetch InterPro domain boundaries (default True)
     interpro_delay  : seconds between InterPro requests
     uniprot_delay   : seconds between UniProt requests
-
     Returns
     -------
     dict[seq_id -> annotation_dict]
