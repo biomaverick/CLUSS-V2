@@ -3,9 +3,7 @@ preprocessing/taxon_weights.py
 ══════════════════════════════
 Compute per-sequence taxon diversity weights to reduce phylogenetic
 sampling bias in clustering.
-
 Two weighting strategies are provided:
-
 1. Simple inverse-frequency weighting (original)
    ──────────────────────────────────────────────
    weight[seq] = N / count(organism of seq)
@@ -13,7 +11,6 @@ Two weighting strategies are provided:
    but evolutionarily they are nearly identical. A single Thermus
    thermophilus gets the same weight as a single H. sapiens, ignoring
    their very different evolutionary distances from the bulk of the data.
-
 2. NCBI taxonomy-aware weighting (upgrade — MD Section 2.6)
    ──────────────────────────────────────────────────────────
    Uses NCBI taxonomy lineage to compute phylogenetic-distance-based
@@ -21,7 +18,6 @@ Two weighting strategies are provided:
    common ancestors) with other organisms in the dataset get lower
    weights. Sequences from phylogenetically unique organisms are
    up-weighted.
-
    Implementation uses Biopython's Entrez API to fetch lineage strings,
    then computes pairwise lineage overlap as a proxy for phylogenetic
    distance. This is cached to avoid re-fetching on repeated runs.
