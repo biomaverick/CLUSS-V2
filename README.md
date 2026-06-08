@@ -135,7 +135,7 @@ below to gauge expected runtime before launching large jobs.
 
 ---
 ## Credits
-**CLUSS V2.0** developed by [Debojyoti C](https://github.com/biomaverick)
+**CLUSS V2.0** developed by [Debojyoti C](https://github.com/biomaverick) [Samiul H](https://github.com/samiowl) 
 Based on the original CLUSS algorithm:
 > Kelil, Wang, Brzezinski & Fleury (2007) *BMC Bioinformatics* 8:286
 > DOI: 10.1186/1471-2105-8-286
