@@ -384,18 +384,22 @@ def to_newick(node: TreeNode,
 # Newick round-trip: load Newick → TreeNode graph
 # ─────────────────────────────────────────────────────────────────────────────
 
+# AFTER:
 def newick_to_treenodes(newick_path: str) -> tuple["TreeNode", dict]:
     """
     Reconstruct a (root, nodes) pair from a Newick file on disk.
     Uses BioPython's ``Phylo.read`` (already a project dependency) and
     maps each clade to a ``TreeNode`` so downstream stages (co-similarity,
     cluster extraction, etc.) work unchanged.
+
+    Fully iterative — safe at N≥10k with no recursion depth concerns.
+
     Parameters
     ----------
     newick_path : path to the ``.nwk`` file written by ``_save_tree``
     Returns
     -------
-    (root TreeNode, nodes dict[int -> TreeNode])
+    (root TreeNode, nodes dict[int -> TreeNode])\
     """
     from Bio import Phylo
     import io
@@ -405,29 +409,56 @@ def newick_to_treenodes(newick_path: str) -> tuple["TreeNode", dict]:
 
     bio_tree = Phylo.read(io.StringIO(newick_str), "newick")
     nodes: dict[int, TreeNode] = {}
-    _id_counter = [0]
+    next_id = 0
 
-    def _convert(clade, parent=None) -> TreeNode:
-        node_id = _id_counter[0]
-        _id_counter[0] += 1
+    # --- Pass 1: BFS to create all TreeNodes and wire parent/children ---
+    # Queue holds (BioPython clade, parent TreeNode or None)
+    from collections import deque
+    queue: deque = deque()
+    queue.append((bio_tree.root, None))
+
+    root: TreeNode | None = None
+    # Map BioPython clade id → TreeNode for the n_leaves pass
+    clade_to_node: dict[int, TreeNode] = {}
+
+    while queue:
+        clade, parent_node = queue.popleft()
 
         is_leaf = (clade.name is not None and not clade.clades)
         seq_id  = clade.name if is_leaf else None
-        node    = TreeNode(node_id, is_leaf=is_leaf, seq_id=seq_id)
+
+        node = TreeNode(next_id, is_leaf=is_leaf, seq_id=seq_id)
         node.branch_length = float(clade.branch_length or 0.0)
-        node.parent        = parent
-        nodes[node_id]     = node
+        node.parent        = parent_node
+        node.n_leaves      = 1 if is_leaf else 0
+        nodes[next_id]     = node
+        clade_to_node[id(clade)] = node
+
+        if parent_node is not None:
+            parent_node.children.append(node)
+        else:
+            root = node
+
+        next_id += 1
 
         for child_clade in clade.clades:
-            child = _convert(child_clade, parent=node)
-            node.children.append(child)
-            node.n_leaves += child.n_leaves
+            queue.append((child_clade, node))
 
-        if is_leaf:
-            node.n_leaves = 1
+    # --- Pass 2: bottom-up n_leaves accumulation (iterative post-order) ---
+    # Process leaves first, then work upward via parent pointers.
+    # We do a reverse-BFS order: nodes were added BFS so reversing gives
+    # leaves before their parents.
+    for node in reversed(list(nodes.values())):
+        if node.parent is not None and not node.is_leaf:
+            node.parent.n_leaves += node.n_leaves
+        elif node.parent is not None and node.is_leaf:
+            node.parent.n_leaves += 1
 
-        return node
+    # --- Pass 3: recover merge_similarity from branch lengths ---
+    for node in nodes.values():
+        if not node.is_leaf and node.children:
+            avg_bl = sum(c.branch_length for c in node.children) / len(node.children)
+            node.merge_similarity = max(0.0, 1.0 - 2.0 * avg_bl)
 
-    root = _convert(bio_tree.root)
     assign_depths(root)
     return root, nodes
