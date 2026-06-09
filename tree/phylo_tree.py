@@ -333,10 +333,11 @@ def build_phylo_tree(S: np.ndarray,
 # Newick serialisation
 # ─────────────────────────────────────────────────────────────────────────────
 
+# AFTER:
 def to_newick(node: TreeNode,
               bootstrap: dict | None = None) -> str:
     """
-    Serialise tree to Newick format string.
+    Serialise tree to Newick format string (iterative, stack-safe at N≥10k).
 
     Parameters
     ----------
@@ -349,17 +350,35 @@ def to_newick(node: TreeNode,
     -------
     Newick string (no trailing newline).
     """
-    if node.is_leaf:
-        return f"{node.seq_id}:{node.branch_length:.6f}"
+    # Iterative post-order traversal using an explicit stack.
+    # Each stack frame is (TreeNode, child_index_processed_so_far).
+    # A node is "done" when child_index == len(node.children).
+    # We collect child Newick strings in a dict keyed by node.id.
+    buf: dict[int, str] = {}
+    stack: list[tuple[TreeNode, int]] = [(node, 0)]
 
-    children_str = ",".join(to_newick(c, bootstrap) for c in node.children)
+    while stack:
+        cur, idx = stack[-1]
 
-    sup = ""
-    if bootstrap is not None and node.id in bootstrap:
-        sup = str(int(round(bootstrap[node.id] * 100)))
+        if cur.is_leaf:
+            buf[cur.id] = f"{cur.seq_id}:{cur.branch_length:.6f}"
+            stack.pop()
+            continue
 
-    return f"({children_str}){sup}:{node.branch_length:.6f}"
+        if idx < len(cur.children):
+            # Push next unprocessed child; advance counter on current frame
+            stack[-1] = (cur, idx + 1)
+            stack.append((cur.children[idx], 0))
+        else:
+            # All children done — build this node's string
+            children_str = ",".join(buf[c.id] for c in cur.children)
+            sup = ""
+            if bootstrap is not None and cur.id in bootstrap:
+                sup = str(int(round(bootstrap[cur.id] * 100)))
+            buf[cur.id] = f"({children_str}){sup}:{cur.branch_length:.6f}"
+            stack.pop()
 
+    return buf[node.id]
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Newick round-trip: load Newick → TreeNode graph
