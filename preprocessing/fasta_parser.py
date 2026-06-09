@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 import os
 
-VALID_AA = frozenset("ACDEFGHIKLMNPQRSTVWY")
+VALID_AA = frozenset("ACDEFGHIKLMNPQRSTVWYX")
 
 
 def parse_fasta(path: str) -> dict[str, str]:
@@ -53,7 +53,7 @@ def validate_sequences(sequences: dict[str, str],
     Gates (in order):
       1. Length ≥ min_len residues
       2. Only standard 20-letter amino acid alphabet
-         (X, B, Z, U and other ambiguous chars are rejected here;
+         (B, Z, U and other ambiguous chars are rejected here;
           masking later handles low-complexity, not here)
     Parameters
     ----------
