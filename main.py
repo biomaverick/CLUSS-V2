@@ -191,13 +191,6 @@ def _load_tree(out_dir: str):
 
 
 def run(args: argparse.Namespace) -> None:
-    # Fix #8 (interim): raise recursion limit for moderate-N runs.
-    # Fix #1 already converted the main traversals to iterative, but this
-    # safety valve protects any future recursive paths added downstream.
-    _required_depth = 200_000  # conservative ceiling for N up to ~100k
-    if sys.getrecursionlimit() < _required_depth:
-        sys.setrecursionlimit(_required_depth)
-        log.warning("Raised recursion limit to %d.", _required_depth)
 
     t0 = time.time()
 
